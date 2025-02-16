@@ -1,0 +1,1 @@
+# FastApi-fundec-academic-register
