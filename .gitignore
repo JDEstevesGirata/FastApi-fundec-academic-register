@@ -1,0 +1,38 @@
+# Entornos virtuales
+venv/
+.env
+*.env
+
+# Archivos de configuración del editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de caché y compilación de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+
+# Dependencias instaladas
+*.egg-info/
+dist/
+build/
+
+# Logs y dumps
+logs/
+*.log
+*.sqlite3
+
+# Carpeta de datos de MongoDB (si tienes una instancia local)
+data/
+dump/
+
+# Configuración de Docker (si decides usarlo)
+docker-compose.override.yml
+*.dockerfile
+
+# Ignorar node_modules en caso de frontend en el mismo repo
+node_modules/
