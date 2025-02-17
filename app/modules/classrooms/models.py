@@ -11,6 +11,9 @@ class ClassroomBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
     code: str = Field(..., min_length=1, max_length=20)
 
+class Classroom(ClassroomBase, MongoBaseModel, AuditFields):
+    """Complete Classroom model"""
+
 class ClassroomCreate(ClassroomBase):
     """Schema for creating a classroom"""
 
@@ -29,7 +32,4 @@ class ClassroomResponse(ClassroomBase):
         if "_id" in data and isinstance(data["_id"], ObjectId):
             data["_id"] = str(data["_id"])
         return cls(**data)
-
-class Classroom(ClassroomBase, MongoBaseModel, AuditFields):
-    """Complete Classroom model"""
     

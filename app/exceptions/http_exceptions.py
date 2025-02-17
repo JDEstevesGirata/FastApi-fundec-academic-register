@@ -40,3 +40,14 @@ class DuplicateResourceException(BaseAPIException):
             error_code="DUPLICATE_RESOURCE",
             details={"resource": resource, "field": field, "value": value}
         )
+
+class UnauthorizedException(HTTPException):
+    """
+    Exception raised for unauthorized access or invalid authentication credentials.
+    
+    :param detail: Optional error message (default: "Invalid credentials").
+    :param headers: Optional headers for the HTTP response.
+    """
+    def __init__(self, detail: str = "Invalid credentials", headers: dict = None):
+        super().__init__(
+            status_code=401, detail=detail, headers=headers or {"WWW-Authenticate": "Bearer"})
