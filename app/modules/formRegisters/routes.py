@@ -21,7 +21,7 @@ async def create_form(
     user: str = Depends(check_teacher_role),
 ):
     """Create a new form"""
-    return await service.create_form(data, user)
+    return await service.create_form(data, user.identification_number)
 
 @form_router.get("/{form_id}", response_model=FormRegister)
 async def get_form(
@@ -63,7 +63,7 @@ async def update_form(
     # Verificar si el teacher solo puede actualizar su formulario
     if user.role == "teacher" and form.cedula != user.identification_number:
         raise HTTPException(status_code=403, detail="Forbidden")
-    return await service.update_form(form_id, data, user)
+    return await service.update_form(form_id, data, user.identification_number)
 
 @form_router.delete("/{form_id}")
 async def delete_form(

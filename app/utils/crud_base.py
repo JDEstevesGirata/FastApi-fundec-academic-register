@@ -2,6 +2,7 @@
 Base CRUD class for handling common database operations.
 """
 
+from datetime import datetime
 from typing import Generic, TypeVar, List, Optional, Type
 from pydantic import BaseModel
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -33,7 +34,12 @@ class CRUDBase(Generic[T]):
         :param created_by: User who created the document.
         :return: Created document with ID.
         """
-        data.update({"created_by": created_by, "is_active": True})
+        data.update({
+        "created_by": created_by,
+        "created_at": datetime.utcnow(),  # Agregar la fecha de creación
+        "is_active": True
+        })
+
         result = await self.collection.insert_one(data)
         return await self.get_by_id(result.inserted_id)
 
@@ -89,7 +95,11 @@ class CRUDBase(Generic[T]):
         if not object_id:
             return None
 
-        data["updated_by"] = updated_by
+        data.update({
+        "updated_by": updated_by,
+        "updated_at": datetime.utcnow()
+        })
+
         update_result = await self.collection.update_one(
             {"_id": object_id, "is_active": True},
             {"$set": data}

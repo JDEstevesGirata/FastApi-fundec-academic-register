@@ -10,6 +10,7 @@ from app.modules.users.routes import router as auth_router
 from app.modules.classrooms.routes import router as classroom_router
 from app.modules.teachers.routes import teacher_router
 from app.modules.courses.routes import course_router
+from app.modules.formRegisters.routes import form_router
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):  # Cambié 'app' por '_app' para evitar redefinición
@@ -28,10 +29,11 @@ app = FastAPI(  # Cambié 'app' por 'api_app'
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Permite solicitudes solo desde este origen
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
     allow_credentials=True,
-    allow_methods=["*"],  # Permite todos los métodos HTTP (GET, POST, etc.)
-    allow_headers=["*"],  # Permite todos los encabezados
+    allow_methods=["*"],
+    allow_headers=["*", "Authorization"],  # Asegúrate de incluir Authorization explícitamente
+    expose_headers=["*"],
 )
 
 # Registro de middlewares
@@ -55,3 +57,4 @@ app.include_router(auth_router)
 app.include_router(classroom_router)
 app.include_router(teacher_router)
 app.include_router(course_router)
+app.include_router(form_router)

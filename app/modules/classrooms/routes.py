@@ -7,7 +7,7 @@ from app.db.dependencies import get_database
 from app.exceptions.http_exceptions import NotFoundException
 from app.modules.classrooms.models import Classroom, ClassroomCreate, ClassroomUpdate
 from app.modules.classrooms.service import ClassroomService
-from app.utils.security import check_admin_role
+from app.utils.security import check_admin_role, check_teacher_role
 
 
 router = APIRouter(prefix="/classrooms", tags=["classrooms"])
@@ -23,7 +23,7 @@ async def create_classroom(
     user: str = Depends(check_admin_role),
 ):
     """Create a new classroom"""
-    return await service.create_classroom(data, user)
+    return await service.create_classroom(data, user.identification_number)
 
 @router.get("/{classroom_id}", response_model=Classroom)
 async def get_classroom(
@@ -39,7 +39,7 @@ async def list_classrooms(
     skip: int = 0,
     limit: int = 100,
     service: ClassroomService = Depends(get_classroom_service),
-    user: str = Depends(check_admin_role),
+    user: str = Depends(check_teacher_role),
 ):
     """List all classrooms with pagination"""
     return await service.get_all(skip, limit)
@@ -52,7 +52,7 @@ async def update_classroom(
     user: str = Depends(check_admin_role),
 ):
     """Update a specific classroom"""
-    return await service.update_classroom(classroom_id, data, user)
+    return await service.update_classroom(classroom_id, data, user.identification_number)
 
 @router.delete("/{classroom_id}")
 async def delete_classroom(

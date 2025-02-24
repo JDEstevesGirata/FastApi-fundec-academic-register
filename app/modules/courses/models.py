@@ -24,6 +24,7 @@ class CourseUpdate(CourseBase):
     name: str | None = None
     code: str | None = None
     description: str | None = None
+    is_active: bool
 
 class CourseResponse(CourseBase):
     """Response model for Course with string _id"""

@@ -1,6 +1,8 @@
 """ Service CRUD Teachers """
 
 from typing import List
+from bson import ObjectId
+from fastapi import HTTPException
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.exceptions.http_exceptions import DuplicateResourceException
 from app.modules.teachers.models import Teacher, TeacherCreate, TeacherUpdate
@@ -23,15 +25,29 @@ class TeacherService(CRUDBase[Teacher]):
         """Retrieve all teachers with pagination."""
         return [Teacher(**teacher) for teacher in await super().get_all(skip, limit)]
 
-    async def update_teacher(
-            self, teacher_id: str, data: TeacherUpdate, updated_by: str) -> Teacher:
-        """Update teacher details after checking for duplicate email."""
+    async def update_teacher(self, teacher_id: str, data: TeacherUpdate, updated_by: str) -> Teacher:
+        """Update teacher details after checking for duplicate email and identification number."""
+
+        try:
+            obj_id = ObjectId(teacher_id)
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail="Invalid teacher ID format") from exc
+
         teacher = await self.get_by_id_or_raise(teacher_id, "Teacher")
+
+        if not teacher:
+            raise HTTPException(status_code=404, detail="Teacher not found")
+
         if data.email and data.email != teacher.email:
             await self._check_duplicate_email(data.email, exclude_id=teacher.id)
+
         if data.identification_number and data.identification_number != teacher.identification_number:
             await self._check_duplicate_identification_number(data.identification_number, exclude_id=teacher.id)
-        return await self.update(teacher_id, data.model_dump(exclude_unset=True), updated_by)
+
+        await self.update(obj_id, data.model_dump(exclude_unset=True), updated_by)
+
+        return await self.get_by_id_or_raise(teacher_id, "Teacher")
+
 
     async def delete_teacher(self, teacher_id: str, deleted_by: str) -> bool:
         """Disable a teacher instead of deleting them permanently."""

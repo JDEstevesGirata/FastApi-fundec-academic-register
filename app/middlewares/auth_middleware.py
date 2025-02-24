@@ -13,6 +13,7 @@ from app.modules.users.service import UserService
 from app.utils.security import decode_access_token
 from app.db.dependencies import get_database
 
+
 logger = logging.getLogger(__name__)
 
 class JWTAuthMiddleware(BaseHTTPMiddleware):
@@ -55,6 +56,9 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
         """
         # Check if the path should be excluded from authentication
         if request.url.path in self.exclude_paths:
+            return await call_next(request)
+        # Excluir solicitudes OPTIONS del middleware de autenticación
+        if request.method == "OPTIONS":
             return await call_next(request)
 
         try:

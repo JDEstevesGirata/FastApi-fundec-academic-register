@@ -22,7 +22,7 @@ async def create_teacher(
     user: str = Depends(check_admin_role),
 ):
     """Create a new teacher"""
-    return await service.create_teacher(data, user)
+    return await service.create_teacher(data, user.identification_number)
 
 @teacher_router.get("/{teacher_id}", response_model=Teacher)
 async def get_teacher(
@@ -51,7 +51,7 @@ async def update_teacher(
     user: str = Depends(check_admin_role),
 ):
     """Update a specific teacher"""
-    return await service.update_teacher(teacher_id, data, user)
+    return await service.update_teacher(teacher_id, data, user.identification_number)
 
 @teacher_router.delete("/{teacher_id}")
 async def delete_teacher(

@@ -12,8 +12,9 @@ class TeacherBase(BaseModel):
     lastname: str = Field(..., min_length=1, max_length=100)
     identification_number: str = Field(..., min_length=5, max_length=20)
     email: EmailStr
-    mobile_phone: str = Field(..., min_length=10, max_length=15)
-
+    mobile_phone: str = Field(..., min_length=8, max_length=15)
+    is_active: bool
+    role: str
 class Teacher(TeacherBase, MongoBaseModel, AuditFields):
     """Complete Teacher model"""
 
@@ -27,6 +28,8 @@ class TeacherUpdate(TeacherBase):
     identification_number: str | None = None
     email: EmailStr | None = None
     mobile_phone: str | None = None
+    is_active: bool
+    role: str
 
 class TeacherResponse(TeacherBase):
     """Response model for Teacher with string _id"""

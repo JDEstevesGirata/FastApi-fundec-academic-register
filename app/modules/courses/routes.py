@@ -7,7 +7,7 @@ from app.db.dependencies import get_database
 from app.exceptions.http_exceptions import NotFoundException
 from app.modules.courses.models import Course, CourseCreate, CourseUpdate
 from app.modules.courses.services import CourseService
-from app.utils.security import check_admin_role
+from app.utils.security import check_admin_role, check_teacher_role
 
 course_router = APIRouter(prefix="/courses", tags=["courses"])
 
@@ -23,7 +23,7 @@ async def create_course(
     user: str = Depends(check_admin_role),
 ):
     """Create a new course"""
-    return await service.create_course(data, user)
+    return await service.create_course(data, user.identification_number)
 
 @course_router.get("/{course_id}", response_model=Course)
 async def get_course(
@@ -39,7 +39,7 @@ async def list_courses(
     skip: int = 0,
     limit: int = 100,
     service: CourseService = Depends(get_course_service),
-    user: str = Depends(check_admin_role),
+    user: str = Depends(check_teacher_role),
 ):
     """List all courses with pagination"""
     return await service.get_all(skip, limit)
@@ -52,7 +52,7 @@ async def update_course(
     user: str = Depends(check_admin_role),
 ):
     """Update a specific course"""
-    return await service.update_course(course_id, data, user)
+    return await service.update_course(course_id, data, user.identification_number)
 
 @course_router.delete("/{course_id}")
 async def delete_course(

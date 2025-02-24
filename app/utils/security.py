@@ -90,7 +90,7 @@ async def check_teacher_role(request: Request) -> dict:
     :raises HTTPException: If user doesn't have admin or teacher role
     """
     user = request.state.user
-    if user.role != ADMIN or TEACHER:
+    if user.role not in {ADMIN, TEACHER}:  # Usando un conjunto para mejor legibilidad
         raise HTTPException(
             status_code=403,
             detail="You don't have sufficient privileges"

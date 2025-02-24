@@ -6,7 +6,7 @@ class FormRegisterBase(BaseModel):
     """Base fields for FormRegister"""
     dia: str = Field(..., min_length=1)
     fecha: str = Field(..., min_length=1)
-    jornada: str = Field(..., min_length=1)
+    jornada: str
     aula: str = Field(..., min_length=1)
     nombre: str = Field(..., min_length=1)
     apellido: str = Field(..., min_length=1)
@@ -15,8 +15,7 @@ class FormRegisterBase(BaseModel):
     contenido: str = Field(..., min_length=1)
     horaEntrada: str = Field(..., min_length=1)
     horaSalida: str = Field(..., min_length=1)
-    cantidadHoras: str = Field(..., min_length=1)
-    registroSalida: bool
+    cantidadHoras: float
     horaRegistroEntrada: str | None
     direccion: str | None
 

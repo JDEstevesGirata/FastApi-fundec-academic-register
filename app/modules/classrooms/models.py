@@ -10,6 +10,7 @@ class ClassroomBase(BaseModel):
     """Base Classroom fields"""
     name: str = Field(..., min_length=1, max_length=100)
     code: str = Field(..., min_length=1, max_length=20)
+    is_active: bool
 
 class Classroom(ClassroomBase, MongoBaseModel, AuditFields):
     """Complete Classroom model"""
